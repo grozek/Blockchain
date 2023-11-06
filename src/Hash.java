@@ -3,6 +3,7 @@ import java.util.Arrays;
 public class Hash {
   byte[] hash;
 
+  
   public Hash(byte[] data) {
     this.hash = data;
   } // Hash(byte[])
