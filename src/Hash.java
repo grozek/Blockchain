@@ -34,3 +34,4 @@ public class Hash {
   } // equals(Object)
 
 } // class Hash
+
