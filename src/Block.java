@@ -2,6 +2,7 @@ import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 
 public class Block {
@@ -20,10 +21,10 @@ public class Block {
     int sizeOfNonce = 4;
     byte[] nonceByteArr;
     Hash tempHash;
-
+    Random rand = new Random();
     do {
       nonceByteArr = ByteBuffer.allocate(sizeOfNonce).putInt(nonce).array();
-      nonce++;
+      nonce = rand.nextInt();
       try {
         tempHash = new Hash(calculateHash(this.block, this.amtTransferred, this.prevHash, nonceByteArr));
         this.hash = tempHash;
