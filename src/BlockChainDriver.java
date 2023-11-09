@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class BlockChainDriver {
   public static void main(String[] args) {
-    String startingAmt = args[1];
+    String startingAmt = args[0];
     BlockChain aBlockChain = new BlockChain(Integer.valueOf(startingAmt));
     PrintWriter pen = new PrintWriter(System.out, true);
     Scanner scan = new Scanner(System.in);

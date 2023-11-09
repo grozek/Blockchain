@@ -1,3 +1,4 @@
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class Hash {
@@ -17,12 +18,25 @@ public class Hash {
     return Arrays.equals(arrOf0s, 0, 3, this.hash, 0, 3);
   } // isValid()
 
+  //the str+= assignment in the for loop did not work, the byte array doesnt either. string format is questionable
   public String toString() {
-    String str = "";
+    //byte[] tempArr = new byte[this.hash.length];
+    // for(int i=0; i<=this.hash.length-1; i++) {
+    //   tempArr[i] += (Byte.toUnsignedInt(this.hash[i]));
+    // }
+    // int tem = 456;
+    //int tempInt = Integer.valueOf(tempArr);
+    // StringBuilder hexString = new StringBuilder();
+    // for (byte b : this.hash) {
+    //   hexString.append(String.format("%02x", b));
+    // }
+    // return hexString.toString();
+    byte[] tempArr = new byte[this.hash.length];
     for(int i=0; i<=this.hash.length-1; i++) {
-      str += (Byte.toUnsignedInt(this.hash[i]));
-    }
-    return String.format("%.2x", str);
+       tempArr[i] += (Byte.toUnsignedInt(this.hash[i]));
+     }
+     int i = ByteBuffer.wrap(this.hash).getInt();
+     return; 
   } // toString()
 
   public boolean equals(Object other) {

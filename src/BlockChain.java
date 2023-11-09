@@ -5,21 +5,15 @@ public class BlockChain {
   Node last;
 
   public BlockChain(int initial) {
-    this.first.data = new Block(0, initial, null);
-    this.first.next = null;
+    this.first = new Node (new Block(0, initial, null), null);
     this.last = this.first;
-  // int block;
-  // int amtTransferred;
-  // Hash prevHash;
-  // long nonce;
-  // Hash hash;
   } // BlockChain(int)
 
   public Block mine(int amount) {
     Block tempBlock = this.last.data;
 
     this.last.next = this.last;
-    this.last.data = new Block(tempBlock.block + 1, amount, tempBlock.prevHash);
+    this.last.data = new Block(tempBlock.block + 1, amount, tempBlock.hash);
 
     return this.last.data;
   } // mine(int)
