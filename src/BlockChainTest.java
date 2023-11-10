@@ -15,5 +15,12 @@ public class BlockChainTest {
   BlockChain aBlockChain = new BlockChain(Integer.valueOf(startingAmt));
   Block tempBlock = aBlockChain.mine(Integer.valueOf(-150));
   assertEquals(tempBlock.block, 0);
+  aBlockChain.toString();
+
+  long nonce = 2016357;
+  Block newBlk = new Block(1, -150, null, nonce);
+  System.out.println(newBlk.toString());
+
+
 }
 }

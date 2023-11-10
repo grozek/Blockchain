@@ -1,48 +1,70 @@
 import java.io.PrintWriter;
 
+/**
+ * A singly-linked structure that represents a blockchain made of blocks.
+ * 
+ * @author Gabriela Roznawska, Wenfei Lin
+ */
 public class BlockChain {
   Node first;
   Node last;
 
+  /**
+   * Creates a blockchain that possess a single block that starts with the given initial amount.
+   * 
+   * @param initial the initial transaction between Alexis and Blake
+   */
   public BlockChain(int initial) {
-    this.first = new Node (new Block(0, initial, null), null);
+    this.first = new Node(new Block(0, initial, null), null);
     this.last = this.first;
   } // BlockChain(int)
 
+  /**
+   * Mines a new candidate block to be added to the end of the chain.
+   * 
+   * @param amount the amount transferred between Alexis and Blake
+   * @return a valid block that can be added to the blockchain with updated information
+   */ 
   public Block mine(int amount) {
     Block tempBlock = this.last.data;
+    Block candidateBlock = new Block(tempBlock.block + 1, amount, tempBlock.hash);
 
-    this.last.next = this.last;
-    this.last.data = new Block(tempBlock.block + 1, amount, tempBlock.hash);
-
-    return this.last.data;
+    return candidateBlock;
   } // mine(int)
 
+  /**
+   * Returns the size of the blockchain.
+   * 
+   * @return the number of blocks in the blockchain 
+   */
   public int getSize() {
     return this.last.data.block + 1;
   } // getSize()
 
-  public void append(Block blk) throws IllegalArgumentException{
-    Node tempNode = new Node (blk, null);
-    Node pointer = this.first;
-    int transactionValue = 0;
+  /**
+   * Adds this block to the list.
+   * 
+   * @param blk a block
+   * @throws IllegalArgumentException if block (invalid) can't be added to the chain
+   */
+  public void append(Block blk) throws IllegalArgumentException {
+    Node tempNode = new Node(blk, null);
 
-    for(int i=0; i < this.getSize()-1; i++) {
-      transactionValue += pointer.data.amtTransferred;
-      pointer = pointer.next;
-    }
-
-    if ((blk.block == this.last.data.block + 1) 
-        && (blk.prevHash == this.last.data.prevHash) 
-        && (blk.hash.isValid())
-        && (transactionValue + blk.amtTransferred >= 0)){
-      this.last.next = tempNode; // connects new block to the end of the chain
-      this.last = tempNode; // moves the last pointer
+    if ((blk.block == this.last.data.block + 1) && (blk.prevHash.equals(this.last.data.hash))
+        && (blk.hash.isValid())) {
+      this.last.next = tempNode; 
+      this.last = tempNode; 
     } else {
       throw new IllegalArgumentException();
-    } 
+    }
   } // append(Block)
 
+  /**
+   * Removes the last block from the chain if there is more than one block in the chain.
+   * 
+   * @return true if successfully removes the last block from the chain;
+   *         false if the chain only contains a single block (also does nothing)
+   */
   public boolean removeLast() {
     if (this.first == this.last) {
       return false;
@@ -50,7 +72,7 @@ public class BlockChain {
       int prevBlockNum = this.last.data.block - 1;
 
       Node pointer = this.first;
-      for(int i=0; i < this.getSize()-1; i++) {
+      for (int i = 0; i < this.getSize(); i++) {
         if (pointer.data.block == prevBlockNum) {
           pointer.next = null;
           this.last = pointer;
@@ -62,66 +84,87 @@ public class BlockChain {
     return true;
   } // removeLast()
 
+  /**
+   * Returns the hash of the last block in the chain.
+   * 
+   * @return
+   */
   public Hash getHash() {
     return this.last.data.hash;
-
   } // getHash()
 
+  /**
+   * Traverses the blockchain and ensures that its blocks are consistent and valid.
+   * @return true if the blockchain contains valid transactions;
+   *         false if the blockchain contains invalid transactions (if anyone's balance
+   *         is negative)
+   */
   public boolean isValidBlockChain() {
     Node pointer = this.first;
-    Node nextPointer = this.first.next;
     int transactionValue = 0;
 
-    for(int i=0; i < this.getSize()-1; i++) {
-      if (!((pointer.data.block ==  nextPointer.data.block - 1) 
-        && (pointer.data.prevHash == this.last.data.prevHash) 
-        && (pointer.data.hash.isValid())
-        && (transactionValue + pointer.data.amtTransferred >= 0))){
-          return false;
-        }
-        if(i == pointer.data.block-1){
-          pointer = pointer.next;
-          nextPointer = null;
-        }else{
-        pointer = pointer.next;
-        nextPointer = nextPointer.next;
-        }
+    do {
+      transactionValue += pointer.data.amtTransferred;
+      pointer = pointer.next;
+    } while (pointer != null);
+    {
+      if (transactionValue <= 0) {
+        return false;
+      }
     }
     return true;
-   }// isValidBlockChain()
+  } // isValidBlockChain()
 
+  /**
+   * Calculates and prints the balances of Alexis and Blake.
+   */
   public void printBalances() {
     PrintWriter pen = new PrintWriter(System.out, true);
     int amtAlexis = 0;
     int amtBlake = 0;
     Node pointer = this.first;
-    for(int i=0; i < this.getSize()-1; i++) {
-      if (pointer.data.amtTransferred < 0){
-        amtBlake -= pointer.data.amtTransferred; 
-        amtAlexis = amtAlexis + pointer.data.amtTransferred; 
-      }else{
+
+    for (int i = 0; i < this.getSize(); i++) {
+      if (pointer.data.amtTransferred < 0) {
+        amtBlake -= pointer.data.amtTransferred;
+        amtAlexis = amtAlexis + pointer.data.amtTransferred;
+      } else {
         amtAlexis += pointer.data.amtTransferred;
         amtBlake = amtBlake - pointer.data.amtTransferred;
       }
       pointer = pointer.next;
     }
-    pen.println("Alexis: " +  amtAlexis + ", " + "Blake: " + amtBlake + ".");
+    pen.println("Alexis: " + amtAlexis + ", " + "Blake: " + amtBlake);
   } // printBalances()
 
+  /**
+   * Stringifies the whole blockchain.
+   */
   public String toString() {
     String blockchainString = "";
     Node pointer = this.first;
-    for(int i=0; i < this.getSize()-1; i++) {
+
+    for (int i = 0; i < this.getSize(); i++) {
       blockchainString += pointer.data.toString() + "\n";
       pointer = pointer.next;
     }
     return blockchainString;
   } // toString()
 
+  /**
+   * A class to represent a node that contains data and a pointer.
+   */
   static class Node {
     Block data;
     Node next;
 
+    /**
+     * Creates a node that contains the block, which can then be connected to 
+     * a blockchain.
+     * 
+     * @param data a block
+     * @param next pointer
+     */
     public Node(Block data, Node next) {
       this.data = data;
       this.next = next;

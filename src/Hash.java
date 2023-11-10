@@ -1,46 +1,71 @@
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ * A class to represent the cryptographic hash of blocks in blockchains.
+ * 
+ * @author Gabriela Roznawska, Wenfei
+ */
 public class Hash {
   byte[] hash;
 
-  
+  /**
+   * Creates a new Hash object given the hash
+   * 
+   * @param data the hash
+   */
   public Hash(byte[] data) {
     this.hash = data;
   } // Hash(byte[])
 
+  /**
+   * Retrieves the hash of the object
+   *
+   * @return the hash of the object
+   */
   public byte[] getData() {
     return this.hash;
   } // getData()
 
+  /**
+   * Checks if the hash of the object contains three zeroes in the front
+   *
+   * @return true if the hash has three zeroes in the front; false if the hash does not have three
+   *         zeroes in the front
+   */
   public boolean isValid() {
     byte[] arrOf0s = {0, 0, 0};
     return Arrays.equals(arrOf0s, 0, 3, this.hash, 0, 3);
   } // isValid()
 
-  //the str+= assignment in the for loop did not work, the byte array doesnt either. string format is questionable
+  /**
+   * Converts the hash to a string
+   *
+   * @return stringified version of the hash
+   */
   public String toString() {
-    byte[] tempArr = new byte[this.hash.length];
-    for(int i=0; i<=this.hash.length-1; i++) {
-      tempArr[i] += (Byte.toUnsignedInt(this.hash[i]));
+    String str = "";
+
+    for (int i = 0; i <= this.hash.length - 1; i++) {
+      str += String.format("%02x", (Byte.toUnsignedInt(this.hash[i])));
     }
-    // int tem = 456;
-    //int tempInt = Integer.valueOf(tempArr);
-    // byte[] tempArr = new byte[this.hash.length];
-    // for(int i=0; i<=this.hash.length-1; i++) {
-    //    tempArr[i] += (Byte.toUnsignedInt(this.hash[i]));
-    //  }
-    //  int i = ByteBuffer.wrap(this.hash).getInt();
-      return String.format("%020x", tempArr); 
+
+    return str;
   } // toString()
 
+  /**
+   * Checks if the hash of the object is structurally equal to the hash of another object
+   *
+   * @param other another Hash object
+   * @return true if the two hashes are the same; false if the two hashes are not the same
+   */
   public boolean equals(Object other) {
-    if (other instanceof Hash) { // might need to change idk
+    if (other instanceof Hash) {
       Hash obj = (Hash) other;
       return Arrays.equals(this.hash, obj.getData());
     }
+
     return false;
   } // equals(Object)
-
 } // class Hash
 
