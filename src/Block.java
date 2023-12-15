@@ -11,6 +11,9 @@ import java.util.Random;
  */
 public class Block {
 
+  /**
+   * Fields
+   */
   int block;
   int amtTransferred;
   Hash prevHash;
@@ -30,17 +33,14 @@ public class Block {
     this.block = num;
     this.amtTransferred = amount;
     this.prevHash = prevHash;
-
     Long nonce = (long) 1;
     int sizeOfNonce = 8;
     byte[] nonceByteArr;
     Hash tempHash;
     Random rand = new Random();
-
     do {
       nonce = rand.nextLong();
       nonceByteArr = ByteBuffer.allocate(sizeOfNonce).putLong(nonce).array();
-
       try {
         tempHash =
             new Hash(calculateHash(this.block, this.amtTransferred, this.prevHash, nonceByteArr));
@@ -48,7 +48,7 @@ public class Block {
       } catch (NoSuchAlgorithmException e) { // This won't happen though
         PrintWriter pen = new PrintWriter(System.out, true);
         pen.println("The algorithm for computing the hash is invalid.");
-      }
+      } // catch
     } while (!this.hash.isValid());
     this.nonce = nonce;
   } // Block(int, int, Hash)
@@ -70,7 +70,6 @@ public class Block {
     int sizeOfNonce = 8;
     Hash tempHash;
     byte[] nonceByteArr;
-
     do {
       try {
         nonceByteArr = ByteBuffer.allocate(sizeOfNonce).putLong(nonce).array();
@@ -80,7 +79,7 @@ public class Block {
       } catch (NoSuchAlgorithmException e) { // This will won't happen though
         PrintWriter pen = new PrintWriter(System.out, true);
         pen.println("The algorithm for computing the hash is invalid.");
-      }
+      } // catch
     } while (!this.hash.isValid());
   } // Block(int, int, Hash, long)
 
@@ -131,8 +130,8 @@ public class Block {
 
   /**
    * Creates a string representation of the block (with information on the block number, the amount
-   * transferred between Alexis and Blake, the nonce of the block, the hash of the previous block in the
-   * blockchain, and the hash of the block).
+   * transferred between Alexis and Blake, the nonce of the block, the hash of the previous block in
+   * the blockchain, and the hash of the block).
    * 
    * @return string representing the block
    */
@@ -142,9 +141,8 @@ public class Block {
   } // toString()
 
   /**
-   * Calculates the hash by taking into account the block number, amount transferred between 
-   * Alexis and Blake, the hash of the previous block in the blockchain, and the nonce of the 
-   * block.
+   * Calculates the hash by taking into account the block number, amount transferred between Alexis
+   * and Blake, the hash of the previous block in the blockchain, and the nonce of the block.
    * 
    * @param block the block number
    * @param amtTransferred the amount transferred between Alexis and Blake
@@ -162,13 +160,12 @@ public class Block {
       md.update(ByteBuffer.allocate(8).putInt(block).array());
       md.update(ByteBuffer.allocate(8).putInt(amtTransferred).array());
       md.update(nonce);
-
     } else {
       md.update(ByteBuffer.allocate(8).putInt(block).array());
       md.update(ByteBuffer.allocate(8).putInt(amtTransferred).array());
       md.update(prevHash.getData());
       md.update(nonce);
-    }
+    } // else
 
     byte[] hash = md.digest();
     return hash;

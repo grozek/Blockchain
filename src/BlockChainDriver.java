@@ -49,7 +49,7 @@ public class BlockChainDriver {
             pen.printf("Chain is valid!" + "\n" + "\n");
           } else {
             pen.printf("Chain is invalid!" + "\n" + "\n");
-          }
+          } // else
           break;
 
         case "report":
@@ -67,9 +67,8 @@ public class BlockChainDriver {
                   + "    help: prints this list of commands\n" + "    quit: quits the program"
                   + "\n" + "\n");
           break;
-      }
-    }
-
+      } // switch
+    } // while
     scan.close();
   } // main(String[])
 } // class BlockChainDriver
