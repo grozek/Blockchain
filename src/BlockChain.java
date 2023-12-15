@@ -3,14 +3,25 @@ import java.io.PrintWriter;
 /**
  * A singly-linked structure that represents a blockchain made of blocks.
  * 
- * @author Gabriela Roznawska, Wenfei Lin
+ * @author Gabriela Roznawska
+ * @author Wenfei Lin
  */
 public class BlockChain {
+
+  // +--------+------------------------------------------------------
+  // | Fields |
+  // +--------+
+
   Node first;
   Node last;
 
+  // +--------------+------------------------------------------------
+  // | Constructors |
+  // +--------------+
+
   /**
-   * Creates a blockchain that possess a single block that starts with the given initial amount.
+   * Creates a blockchain that possess a single block that starts with 
+   * the given initial amount.
    * 
    * @param initial the initial transaction between Alexis and Blake
    */
@@ -19,15 +30,21 @@ public class BlockChain {
     this.last = this.first;
   } // BlockChain(int)
 
+  // +---------+-----------------------------------------------------
+  // | Methods |
+  // +---------+
+
   /**
    * Mines a new candidate block to be added to the end of the chain.
    * 
    * @param amount the amount transferred between Alexis and Blake
-   * @return a valid block that can be added to the blockchain with updated information
+   * @return a valid block that can be added to the blockchain with 
+   *         updated information
    */
   public Block mine(int amount) {
     Block tempBlock = this.last.data;
-    Block candidateBlock = new Block(tempBlock.block + 1, amount, tempBlock.hash);
+    Block candidateBlock = new Block(tempBlock.block + 1, amount, 
+        tempBlock.hash);
     return candidateBlock;
   } // mine(int)
 
@@ -44,24 +61,29 @@ public class BlockChain {
    * Adds this block to the list.
    * 
    * @param blk a block
-   * @throws IllegalArgumentException if block (invalid) can't be added to the chain
+   * @throws IllegalArgumentException if block (invalid) can't be 
+   *                                  added to the chain
    */
   public void append(Block blk) throws IllegalArgumentException {
     Node tempNode = new Node(blk, null);
-    if ((blk.block == this.last.data.block + 1) && (blk.prevHash.equals(this.last.data.hash))
-        && (blk.hash.isValid())) {
+
+    if ((blk.block == this.last.data.block + 1) && 
+        (blk.prevHash.equals(this.last.data.hash)) && 
+        (blk.hash.isValid())) {
       this.last.next = tempNode;
       this.last = tempNode;
     } else {
       throw new IllegalArgumentException();
-    } // else
+    } // if/else
   } // append(Block)
 
   /**
-   * Removes the last block from the chain if there is more than one block in the chain.
+   * Removes the last block from the chain if there is more than one 
+   * block in the chain.
    * 
-   * @return true if successfully removes the last block from the chain; false if the chain only
-   *         contains a single block (also does nothing)
+   * @return true if successfully removes the last block from the chain; 
+   *         false if the chain only contains a single block (also does 
+   *         nothing)
    */
   public boolean removeLast() {
     if (this.first == this.last) {
@@ -69,32 +91,36 @@ public class BlockChain {
     } else {
       int prevBlockNum = this.last.data.block - 1;
       Node pointer = this.first;
+
       for (int i = 0; i < this.getSize(); i++) {
         if (pointer.data.block == prevBlockNum) {
           pointer.next = null;
           this.last = pointer;
           break;
         } // if
+
         pointer = pointer.next;
       } // for
-    } // else
+    } // if/else
     return true;
   } // removeLast()
 
   /**
    * Returns the hash of the last block in the chain.
    * 
-   * @return
+   * @return hash of the last block in the chain
    */
   public Hash getHash() {
     return this.last.data.hash;
   } // getHash()
 
   /**
-   * Traverses the blockchain and ensures that its blocks are consistent and valid.
+   * Traverses the blockchain and ensures that its blocks are 
+   * consistent and valid.
    * 
-   * @return true if the blockchain contains valid transactions; false if the blockchain contains
-   *         invalid transactions (if anyone's balance is negative)
+   * @return true if the blockchain contains valid transactions; 
+   *         false if the blockchain contains invalid transactions 
+   *         (if anyone's balance is negative)
    */
   public boolean isValidBlockChain() {
     Node pointer = this.first;
@@ -104,11 +130,11 @@ public class BlockChain {
       transactionValue += pointer.data.amtTransferred;
       pointer = pointer.next;
     } while (pointer != null);
-    {
-      if (transactionValue <= 0) {
-        return false;
-      } // if
-    } // while
+
+    if (transactionValue <= 0) {
+      return false;
+    } // if
+
     return true;
   } // isValidBlockChain()
 
@@ -128,9 +154,10 @@ public class BlockChain {
       } else {
         amtAlexis += pointer.data.amtTransferred;
         amtBlake = amtBlake - pointer.data.amtTransferred;
-      } // if
+      } // if/else
       pointer = pointer.next;
     } // for
+
     pen.println("Alexis: " + amtAlexis + ", " + "Blake: " + amtBlake);
   } // printBalances()
 
@@ -145,16 +172,27 @@ public class BlockChain {
       blockchainString += pointer.data.toString() + "\n";
       pointer = pointer.next;
     } // for
+
     return blockchainString;
   } // toString()
+
 
   /**
    * A class to represent a node that contains data and a pointer.
    */
   static class Node {
+
+    // +--------+------------------------------------------------------
+    // | Fields |
+    // +--------+
+
     Block data;
     Node next;
 
+    // +--------------+------------------------------------------------
+    // | Constructors |
+    // +--------------+
+    
     /**
      * Creates a node that contains the block, which can then be connected to a blockchain.
      * 

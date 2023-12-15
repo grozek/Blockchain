@@ -4,12 +4,21 @@ import java.util.Arrays;
 /**
  * A class to represent the cryptographic hash of blocks in blockchains.
  * 
- * @author Gabriela Roznawska, Wenfei
+ * @author Gabriela Roznawska
+ * @author Wenfei Lin
  */
 public class Hash {
+  
+  // +--------+------------------------------------------------------
+  // | Fields |
+  // +--------+
+
   byte[] hash;
 
-  
+  // +--------------+------------------------------------------------
+  // | Constructors |
+  // +--------------+
+
   /**
    * Creates a new Hash object given the hash
    * 
@@ -18,6 +27,10 @@ public class Hash {
   public Hash(byte[] data) {
     this.hash = data;
   } // Hash(byte[])
+
+  // +---------+-----------------------------------------------------
+  // | Methods |
+  // +---------+
 
   /**
    * Retrieves the hash of the object
@@ -31,8 +44,8 @@ public class Hash {
   /**
    * Checks if the hash of the object contains three zeroes in the front
    *
-   * @return true if the hash has three zeroes in the front; false if the hash does not have three
-   *         zeroes in the front
+   * @return true if the hash has three zeroes in the front; false if the 
+   *         hash does not have three zeroes in the front
    */
   public boolean isValid() {
     byte[] arrOf0s = {0, 0, 0};
@@ -49,24 +62,25 @@ public class Hash {
 
     for (int i = 0; i <= this.hash.length - 1; i++) {
       str += String.format("%02x", (Byte.toUnsignedInt(this.hash[i])));
-    }
+    } // for
 
     return str;
   } // toString()
 
   /**
-   * Checks if the hash of the object is structurally equal to the hash of another object
+   * Checks if the hash of the object is structurally equal to the 
+   * hash of another object
    *
    * @param other another Hash object
-   * @return true if the two hashes are the same; false if the two hashes are not the same
+   * @return true if the two hashes are the same; false if the two hashes 
+   *         are not the same
    */
   public boolean equals(Object other) {
     if (other instanceof Hash) {
       Hash obj = (Hash) other;
       return Arrays.equals(this.hash, obj.getData());
-    }
+    } // if
 
     return false;
   } // equals(Object)
 } // class Hash
-
