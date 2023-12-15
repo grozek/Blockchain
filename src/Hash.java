@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class Hash {
   byte[] hash;
 
+  
   /**
    * Creates a new Hash object given the hash
    * 
