@@ -1,4 +1,3 @@
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -8,7 +7,7 @@ import java.util.Arrays;
  * @author Wenfei Lin
  */
 public class Hash {
-  
+
   // +--------+------------------------------------------------------
   // | Fields |
   // +--------+
